@@ -1,0 +1,14 @@
+[
+  { "speaker": "Ayush", "start": 0, "end": 12, "text": "Alright, thanks for hopping on. The goal today is to lock the launch date for Recap and figure out what's blocking us. Priya, want to start with where the recorder is?" },
+  { "speaker": "Priya", "start": 12, "end": 41, "text": "Sure. The local audio capture works on my machine now using the system loopback, but I'm seeing the mic and system audio drift out of sync by about half a second on longer calls. I think I can fix it by timestamping both streams at capture instead of relying on the recorder clock. I'd want two more days on that." },
+  { "speaker": "Ayush", "start": 41, "end": 50, "text": "Two days is fine. Does that block transcription, or can Marcus work in parallel?" },
+  { "speaker": "Marcus", "start": 50, "end": 78, "text": "I can work in parallel. The Whisper integration runs locally and it's already producing decent transcripts on the test recordings. The thing I'm worried about is speaker labels. Local Whisper doesn't diarize, so right now everything shows up as one speaker. I think we ship v1 without speaker names and add diarization later, otherwise we slip a week." },
+  { "speaker": "Priya", "start": 78, "end": 92, "text": "I'd push back a little. The analytics, the talk-time and engagement stuff, that's our whole differentiator and it needs speaker labels. Maybe we at least split by mic versus system audio so it's you versus everyone else?" },
+  { "speaker": "Marcus", "start": 92, "end": 104, "text": "Oh that's clever. Two-channel split is basically free since we already capture them separately. I can label them as Me and Others for v1. That unblocks the talk-time charts." },
+  { "speaker": "Ayush", "start": 104, "end": 120, "text": "Love it. Let's do that. So decision: v1 ships with two-channel Me-versus-Others labeling, full diarization is a fast follow. Marcus, can you have the two-channel split done by Thursday?" },
+  { "speaker": "Marcus", "start": 120, "end": 126, "text": "Thursday works. I'll have it in by end of day Thursday." },
+  { "speaker": "Ayush", "start": 126, "end": 140, "text": "Great. Priya, you've got the sync fix by Wednesday. I'll wire the Claude summarization into the pipeline this week. Are we comfortable saying we launch the beta next Monday?" },
+  { "speaker": "Priya", "start": 140, "end": 148, "text": "If the sync fix lands Wednesday and Marcus is done Thursday, Monday is realistic. I'm in." },
+  { "speaker": "Marcus", "start": 148, "end": 158, "text": "Same. One open question, are we charging for the beta or is it free while we figure out cost? We never decided that." },
+  { "speaker": "Ayush", "start": 158, "end": 168, "text": "Good flag. Let's leave pricing open for now and revisit after we see real usage. Beta is free. Okay, that's a wrap, thanks both." }
+]

@@ -1,0 +1,38 @@
+{
+  "name": "recap",
+  "version": "0.1.0",
+  "description": "Local-first meeting note taker. Records, transcribes, and analyzes meetings using your Claude subscription.",
+  "main": "./out/main/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "start": "electron-vite preview",
+    "setup-models": "bash scripts/setup-models.sh",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "brain:test": "tsx scripts/test-brain.ts",
+    "transcribe:test": "tsx scripts/test-transcribe.ts",
+    "diarize:test": "tsx scripts/test-diarize.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.2.0",
+    "autoprefixer": "^10.5.0",
+    "electron": "^42.4.1",
+    "electron-vite": "^5.0.0",
+    "postcss": "^8.5.15",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "tailwindcss": "^3.4.19",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vite": "^7.3.5"
+  },
+  "dependencies": {
+    "@huggingface/transformers": "^4.2.0",
+    "sherpa-onnx-node": "^1.13.3",
+    "wavefile": "^11.0.0"
+  }
+}

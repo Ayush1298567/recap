@@ -1,0 +1,9 @@
+node_modules/
+out/
+dist/
+.DS_Store
+*.log
+
+# Large model files — re-fetch with `npm run setup-models`
+models/
+src/renderer/public/models/

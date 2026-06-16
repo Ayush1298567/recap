@@ -9,6 +9,7 @@
     "build": "electron-vite build",
     "start": "electron-vite preview",
     "setup-models": "bash scripts/setup-models.sh",
+    "make-launcher": "bash scripts/make-launcher.sh",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "brain:test": "tsx scripts/test-brain.ts",
     "transcribe:test": "tsx scripts/test-transcribe.ts",

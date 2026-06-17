@@ -87,10 +87,15 @@ function createWindow(): void {
 
   if (process.env.ELECTRON_RENDERER_URL) {
     win.loadURL(process.env.ELECTRON_RENDERER_URL)
-    win.webContents.openDevTools({ mode: 'detach' })
+    if (!process.env.RECAP_REMOTE_DEBUG) win.webContents.openDevTools({ mode: 'detach' })
   } else {
     win.loadFile(join(import.meta.dirname, '../renderer/index.html'))
   }
+}
+
+// Opt-in remote debugging for live UI tests (off unless RECAP_REMOTE_DEBUG is set).
+if (process.env.RECAP_REMOTE_DEBUG) {
+  app.commandLine.appendSwitch('remote-debugging-port', process.env.RECAP_REMOTE_DEBUG)
 }
 
 app.whenReady().then(() => {

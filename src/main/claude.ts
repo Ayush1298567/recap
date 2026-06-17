@@ -22,14 +22,17 @@ const CLAUDE_BIN =
 export function runClaude(
   prompt: string,
   system?: string,
-  opts?: { skipPermissions?: boolean }
+  opts?: { allowedTools?: string[]; cwd?: string }
 ): Promise<string> {
   return new Promise((resolve, reject) => {
-    const args = ['-p', '--output-format', 'json']
+    // --safe-mode runs without the user's CLAUDE.md / skills / plugins / hooks, so meeting
+    // content is generated in a clean, deterministic context (no environment noise leaks in).
+    const args = ['-p', '--output-format', 'json', '--safe-mode']
     if (system) args.push('--append-system-prompt', system)
-    // Vision calls need the Read tool to open frame images on disk without an interactive prompt.
-    if (opts?.skipPermissions) args.push('--dangerously-skip-permissions')
-    const child = spawn(CLAUDE_BIN, args, { stdio: ['pipe', 'pipe', 'pipe'] })
+    // Vision restricts to the Read tool and scopes cwd to the frame dir, so untrusted screen
+    // content can't drive Bash/network/file access beyond the images themselves.
+    if (opts?.allowedTools) args.push('--allowedTools', opts.allowedTools.join(','))
+    const child = spawn(CLAUDE_BIN, args, { cwd: opts?.cwd, stdio: ['pipe', 'pipe', 'pipe'] })
 
     let stdout = ''
     let stderr = ''
@@ -87,7 +90,7 @@ function extractJSON<T>(raw: string): T {
 export async function runClaudeJSON<T>(
   prompt: string,
   system?: string,
-  opts?: { skipPermissions?: boolean }
+  opts?: { allowedTools?: string[]; cwd?: string }
 ): Promise<T> {
   const raw = await runClaude(prompt, system, opts)
   return extractJSON<T>(raw)

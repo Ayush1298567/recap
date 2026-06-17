@@ -13,7 +13,8 @@
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "brain:test": "tsx scripts/test-brain.ts",
     "transcribe:test": "tsx scripts/test-transcribe.ts",
-    "diarize:test": "tsx scripts/test-diarize.ts"
+    "diarize:test": "tsx scripts/test-diarize.ts",
+    "export:test": "tsx scripts/test-export.ts"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",

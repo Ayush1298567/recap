@@ -144,6 +144,13 @@ function MeetingView({ meeting }: { meeting: Meeting }) {
   const audioRef = useRef<HTMLAudioElement>(null)
   const [src, setSrc] = useState('')
   const [time, setTime] = useState(0)
+  const [exportMsg, setExportMsg] = useState('')
+
+  async function doExport() {
+    setExportMsg('Exporting…')
+    const path = await window.recap.exportMarkdown(meeting.id)
+    setExportMsg(path ? `Saved: ${path}` : 'Export failed')
+  }
 
   useEffect(() => {
     let url = ''
@@ -167,10 +174,21 @@ function MeetingView({ meeting }: { meeting: Meeting }) {
 
   return (
     <div className="px-10 py-10 max-w-4xl">
-      <div className="text-[11px] uppercase tracking-[0.2em] text-[#9b8a87]">
-        {fmtDate(meeting.createdAt)} · {fmtDur(meeting.durationSeconds)}
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <div className="text-[11px] uppercase tracking-[0.2em] text-[#9b8a87]">
+            {fmtDate(meeting.createdAt)} · {fmtDur(meeting.durationSeconds)}
+          </div>
+          <h2 className="font-serif text-4xl mt-2 leading-tight">{meeting.title}</h2>
+        </div>
+        <button
+          onClick={doExport}
+          className="shrink-0 mt-1 rounded-lg border border-[#2a1c1d] bg-[#0d0708] px-4 py-2 text-sm text-[#ff9d6c] hover:bg-[#160d0e] transition"
+        >
+          Export .md
+        </button>
       </div>
-      <h2 className="font-serif text-4xl mt-2 leading-tight">{meeting.title}</h2>
+      {exportMsg && <div className="mt-2 text-xs font-mono text-[#9b8a87] break-all">{exportMsg}</div>}
 
       {src && <Player audioRef={audioRef} src={src} time={time} setTime={setTime} duration={meeting.durationSeconds} />}
 

@@ -14,6 +14,7 @@ const api = {
   getAudio: (id: string): Promise<Uint8Array | null> => ipcRenderer.invoke('get-audio', id),
   getFrame: (id: string, index: number): Promise<Uint8Array | null> =>
     ipcRenderer.invoke('get-frame', { id, index }),
+  exportMarkdown: (id: string): Promise<string | null> => ipcRenderer.invoke('export-markdown', id),
   ask: (question: string, meetingIds?: string[]): Promise<string> =>
     ipcRenderer.invoke('ask', { question, meetingIds })
 }

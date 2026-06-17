@@ -8,6 +8,7 @@ import { buildAnalytics } from './analytics.js'
 import { buildCoaching } from './coaching.js'
 import { runDiarization, assignSpeakers, mapSpeakerNames } from './diarize.js'
 import { analyzeFrames, screensToContext } from './screen-vision.js'
+import { exportMeetingMarkdown } from './export.js'
 import { saveMeeting, listMeetings, getMeeting, saveAudio, readAudio, saveFrames, readFrame } from './store.js'
 import type { Chapter, CoachingMetric, Meeting, ScreenCapture, TranscriptSegment } from './types.js'
 
@@ -35,7 +36,9 @@ async function diarizeAndName(
     try {
       const names = await mapSpeakerNames(result)
       if (names && Object.keys(names).length) {
-        result = result.map((s) => ({ ...s, speaker: names[s.speaker] ?? s.speaker }))
+        // Keep "Me" literal — it's the stable marker for the user (their mic channel), used by
+        // coaching and personal feedback. Only the other speakers get mapped to real names.
+        result = result.map((s) => (s.speaker === 'Me' ? s : { ...s, speaker: names[s.speaker] ?? s.speaker }))
       }
     } catch {
       // names are best-effort; keep the Speaker N labels
@@ -150,6 +153,18 @@ app.whenReady().then(() => {
   ipcMain.handle('get-meeting', (_e, id: string) => getMeeting(id))
   ipcMain.handle('get-audio', (_e, id: string) => readAudio(id))
   ipcMain.handle('get-frame', (_e, p: { id: string; index: number }) => readFrame(p.id, p.index))
+  ipcMain.handle('export-markdown', async (_e, id: string): Promise<string | null> => {
+    try {
+      const m = getMeeting(id)
+      if (!m) return null
+      const path = await exportMeetingMarkdown(m)
+      shell.showItemInFolder(path)
+      return path
+    } catch (e) {
+      console.log('[export] failed:', (e as Error).message)
+      return null
+    }
+  })
 
   ipcMain.handle('ask', async (_e, payload: { question: string; meetingIds?: string[] }) => {
     const meetings = (payload.meetingIds?.length
